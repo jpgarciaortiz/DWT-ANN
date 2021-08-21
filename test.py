@@ -18,13 +18,13 @@
 # <a href="https://colab.research.google.com/github/jpgarciaortiz/DWT-ANN/blob/main/test.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 # + [markdown] id="qFOJYQ0aofPU"
-# # Pasos previos
-# Conexion con Google Drive e instalacion de paquetes
+# # Previous steps
+#
 
 # + [markdown] id="0yFCGFvIH_Jt"
 # Download MRVC code from GitHub
 
-# + id="XDGHre7wHlNt"
+# + id="XDGHre7wHlNt" outputId="f389131b-b0ab-4e27-81d1-b75e9dae57d6" colab={"base_uri": "https://localhost:8080/"}
 # !rm -rf MRVC ; git clone https://github.com/jpgarciaortiz/MRVC.git
 
 # + [markdown] id="0OjrmSdwLURN"
@@ -37,7 +37,7 @@ sys.path.append("MRVC/src")
 # + [markdown] id="QqpBinBCIzGX"
 # Install additional packages
 
-# + id="AlcU-m2VmYWQ"
+# + id="AlcU-m2VmYWQ" outputId="60b0b831-1154-45d8-ecd9-cdc62b9391ff" colab={"base_uri": "https://localhost:8080/"}
 # !pip install colored
 
 # + [markdown] id="jEmryfcwZUOn"
@@ -45,7 +45,7 @@ sys.path.append("MRVC/src")
 #
 # How to compress images using the DWT.
 
-# + id="y_iZ9RxxZUOq"
+# + id="y_iZ9RxxZUOq" outputId="55126e11-5194-41c4-eb2e-f446f1a4e24a" colab={"base_uri": "https://localhost:8080/"}
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -64,8 +64,9 @@ import information
 # + [markdown] id="Ux_3XfXCZUOr"
 # ## Global parameters of the notebook
 
-# + id="t5PSxsUuZUOr"
+# + id="t5PSxsUuZUOr" outputId="1068541b-e2a3-49ae-a2c7-447b9cfa96ea" colab={"base_uri": "https://localhost:8080/"}
 test_image = "MRVC/sequences/lena_color/"
+res_path = "output/"
 N_levels = 6
 Q_steps = [128, 64, 32, 16, 8, 4, 2, 1]
 N_components = 3
@@ -197,14 +198,14 @@ def entropy(decomposition):
 # + [markdown] id="OUMM5kYrZUOw"
 # ## Testing `DWT.analyze_step()` and `DCT.synthesize_step()`
 
-# + id="wzAQhXxfZUOw" colab={"base_uri": "https://localhost:8080/", "height": 680} outputId="bc94c9f7-b9ce-41ba-eeac-b35080ade3ed"
+# + colab={"base_uri": "https://localhost:8080/", "height": 680} id="wzAQhXxfZUOw" outputId="60d85cbe-8e85-4468-fc2a-ce9b7e283324"
 x = image.read(test_image)
 image.show(x, title="Original")
 
 # + id="8hQrGn5XZUOx"
 L, H = DWT.analyze_step(x, wavelet)
 
-# + id="br4XDeHWZUOx" colab={"base_uri": "https://localhost:8080/", "height": 1000} outputId="73e34202-6a0d-4f4f-b758-49f79ec0b691"
+# + colab={"base_uri": "https://localhost:8080/", "height": 1000} id="br4XDeHWZUOx" outputId="9f7b1b60-0a7a-4768-f6af-8256e1254468"
 image.show(image.normalize(L), "LL DWT domain")
 subbands = ("LH", "HL", "HH")
 for i, sb in enumerate(subbands):
@@ -213,47 +214,34 @@ for i, sb in enumerate(subbands):
 # + id="EVEKwtVYZUOy"
 z = DWT.synthesize_step(L, H, wavelet).astype(np.uint8)
 
-# + id="1BfNsltOZUOy"
-r = x - z
-
-# + id="9HIu9oDbZUOy" colab={"base_uri": "https://localhost:8080/", "height": 663} outputId="3b35a52e-3016-432c-98db-889ad271a910"
-image.show(image.normalize(r), f"DWT finite precission error N_DWT_levels={N_levels}")
-
-# + id="u8NZzPsFZUOy" colab={"base_uri": "https://localhost:8080/"} outputId="d0236bfa-3891-4ada-8712-ddcd7f42e24b"
-r.max()
+# + colab={"base_uri": "https://localhost:8080/", "height": 708} id="9HIu9oDbZUOy" outputId="cbfb5c6f-7318-413d-c5a7-0d7280069b0a"
+image.show(image.normalize(x - z), 
+           f"DWT finite precission error\nN_DWT_levels={N_levels}\n")
 
 # + [markdown] id="XrQHSCAcZUOy"
 # The DWT is not fully reversible, but it is almost.
 
-# + id="4WzS4WiKZUOz"
+# + id="4WzS4WiKZUOz" outputId="fc85e5cd-2bcb-4c1d-e568-d6d7d7c2f347" colab={"base_uri": "https://localhost:8080/", "height": 663}
 image.show(z, "Reconstructed image")
 
 # + [markdown] id="bAun2HL2ZUOz"
 # ## Testing `DWT.analyze()` and `DCT.synthesize()`
 
-# + id="MJBzpsPKZUOz"
+# + id="MJBzpsPKZUOz" outputId="629da8c4-0e12-493e-8832-177725a59869" colab={"base_uri": "https://localhost:8080/"}
 y = DWT.analyze(x, wavelet, N_levels)
 z = DWT.synthesize(y, wavelet, N_levels).astype(np.uint8)
 
-# + id="9vvfUgoRZUO0"
-r = x - z
+# + id="ZEbjWPzrZUO0" outputId="a4c2564f-fb86-4fd0-f810-069c29074072" colab={"base_uri": "https://localhost:8080/", "height": 730}
+image.show(image.normalize(x - z), 
+           f"DWT finite precission error\nN_DWT_levels={N_levels}\nMSE={distortion.MSE(x, z)}\n")
 
-# + id="5BNvTaAqZUO0"
-print(r.max(), r.min())
-
-# + id="ZEbjWPzrZUO0"
-image.show(image.normalize(r), f"DWT finite precission error N_DWT_levels={N_levels}")
-
-# + id="tPxiOE5mZUO0"
-distortion.MSE(x, z)
-
-# + id="DhL0bAQIZUO0"
+# + id="DhL0bAQIZUO0" outputId="2de03206-18b9-43d3-a146-74ac096ac9b2" colab={"base_uri": "https://localhost:8080/", "height": 663}
 image.show(z, "Reconstructed image")
 
 # + [markdown] id="Wy1-axzcZUO1"
 # ## Subbands/components information
 
-# + id="71lxTOc0ZUO1"
+# + id="71lxTOc0ZUO1" outputId="163d8035-f9e4-4f98-b166-3aeb2d729c7b" colab={"base_uri": "https://localhost:8080/"}
 x = image.read(test_image)
 xx = YUV.from_RGB(x.astype(np.int16) - 128) # -128 decreases maximum value of the DC coefficients
 yy = DWT.analyze(xx, wavelet, N_levels)
@@ -305,7 +293,7 @@ Q_steps = [64, 32, 16, 8]
 # 1. Always considering that the transform is (bi)orthogonal and therefore, the distortion among subbands is uncorrelated, we can measure the quantization error in the wavelet domain, inside of the quantized subband, considering the inverse transform gain of such subband.
 # 2. We can measure the distortion in the image domain, after inversely transforming the quantized decomposition. Obviously, this alternative is slower. However, this is the only choice is the transform is not (bi)orthogonal.
 
-# + id="KxApkvn0ZUO2"
+# + id="KxApkvn0ZUO2" outputId="22e61003-24f9-46a9-b1ce-65bb45d1ab09" colab={"base_uri": "https://localhost:8080/", "height": 1000}
 x = image.read(test_image)
 xx = YUV.from_RGB(x.astype(np.int16) - 128)
 #xx = YUV.from_RGB(x.astype(np.int16))
@@ -347,7 +335,7 @@ for Q_step in Q_steps:
     DWT_points.append((BPP, MSE))
     image.show(z_dQ.astype(np.uint8), f"Reconstructed image (Q_step={Q_step})")
 
-# + id="cKoLEP04ZUO2"
+# + id="cKoLEP04ZUO2" outputId="f77e6dde-a865-4bf8-da62-a8fe30075d96" colab={"base_uri": "https://localhost:8080/", "height": 231}
 DCT_points = []
 with open("DCT.txt", 'r') as f:
     for line in f:
@@ -378,12 +366,12 @@ pylab.show()
 # 6. Sort the previous list by the slope field.
 # 7. Find the RD curve that progressively uses decending slopes.
 
-# + id="EgE2J5tsZUO2"
+# + id="EgE2J5tsZUO2" outputId="c01871f3-0f24-46e5-d70b-51560685a677" colab={"base_uri": "https://localhost:8080/"}
 # Read the image and move to the YCoCg domain.
 x = image.read(test_image)
 xx = YUV.from_RGB(x.astype(np.int16) - 128)
 
-# + id="r4epZareZUO3"
+# + id="r4epZareZUO3" outputId="c1a08b71-3a86-4011-bd7a-393f63d7cc58" colab={"base_uri": "https://localhost:8080/"}
 # Compute the DWT
 yy = DWT.analyze(xx, wavelet, N_levels)
 
@@ -408,7 +396,7 @@ for sr in yy[1:]:
             RD_points.append([(0, sbc_avg_energy)])
             RD_slopes.append([])
 
-# + id="_IZ7dPJCZUO3"
+# + id="_IZ7dPJCZUO3" outputId="97d71817-ff24-4334-c64d-9140fe03da2c" colab={"base_uri": "https://localhost:8080/"}
 for _i,_j in enumerate(RD_points):
     print(_i,_j)
     
@@ -425,7 +413,7 @@ def estimate_codestream_len(x, prefix):
     #return information.entropy(x.astype(np.int16).flatten())*x.size
 
 
-# + id="aZU1wsyjZUO4"
+# + id="aZU1wsyjZUO4" outputId="0f6763c0-908f-49fd-bece-fdea5d7e1c06" colab={"base_uri": "https://localhost:8080/"}
 # Populate the rest of points of each curve (subband-component).
 # Distortion is measured in the transform domain.
 
@@ -481,11 +469,11 @@ for sr in yy[1:]:
                 Q_step_number += 1
             sbc_number += 1
 
-# + id="fmjF2rGzZUO4"
+# + id="fmjF2rGzZUO4" outputId="3f289bef-a0a7-4716-ad9b-6ff68c735f68" colab={"base_uri": "https://localhost:8080/"}
 for _i, _j in enumerate(RD_points):
     print(_i, "---", _j)
 
-# + id="89zu_fPLZUO4"
+# + id="89zu_fPLZUO4" outputId="033e803a-0f6e-4128-ac82-9a415ef9e187" colab={"base_uri": "https://localhost:8080/"}
 for _i, _j in enumerate(RD_slopes):
     print(_i, "---", _j)
 
